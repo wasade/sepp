@@ -36,6 +36,10 @@ A test file is provided. You can test by running:
 ./sepp-package/run-sepp.sh sepp-package/test.frag test-gg
 ```
 
+### Setting a temporary directory
+
+SEPP produces quite a few intermediary files. The location of these files can be controlled by setting the environment variable `TMPDIR`. Additionally, SEPP creates checkpointing files which can require a high amount of IO -- the location of those can be specified with `TMPSSDDIR`, or if not specified, they will be placed under `TMPDIR`. Last, by default these directories will be deleted at termination. If the environment variable `SEPP_DO_NOT_DELETE_TMP=1`, they will not be deleted to allow for subsequent interrogation of the files.
+
 ### Results
 
 * You will get a `.json` file, a `.xml` file, and a `.tre` file. 

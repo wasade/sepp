@@ -23,10 +23,21 @@ if [ -z ${TMPDIRSSD+x} ];
 then
     # if $TMPDIRSSD does not exist, just create under the main tmp
 	tmpssd=`mktemp -d -t sepp-tempssd-XXXX --tmpdir`
+    if [ $? -ne 0 ]; 
+    then
+           echo "$0: Can't create temp directory, exiting..."
+           exit 1
+    fi
 else
 	# Should point to a fast (hopefully ssd) tmp location which may be removed after the run
     export TMPDIR=${TMPDIRSSD}
 	tmpssd=`mktemp -d -t sepp-tempssd-XXXX --tmpdir`
+
+    if [ $? -ne 0 ]; 
+    then
+           echo "$0: Can't create temp directory, exiting..."
+           exit 1
+    fi
 
     # make sure the regular temp is reset so other consumers of the pipeline can use it
     export TMPDIR=$tmpbase
@@ -34,9 +45,11 @@ fi
 
 # from http://stackoverflow.com/a/2130323
 function cleanup {
-  echo "Removing $tmp"
-  rm -r $tmp
-  rm -r $tmpssd
+  if [ ${SEPP_DO_NOT_DELETE_TMP} != 1]; then
+      echo "Removing $tmp"
+      rm -r $tmp
+      rm -r $tmpssd
+  fi
   unset TMPDIR
 }
 trap cleanup EXIT
